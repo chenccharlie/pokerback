@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  pokerback:
+    build:
+      context: ../../pokerback
+      dockerfile: docker/Dockerfile.prod
+    command: gunicorn pokerback.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    env_file:
+      - ../envs/prod/.env.prod
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../envs/prod/.env.prod.db
+  nginx:
+    build: ../nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - pokerback
+
+volumes:
+  postgres_data:

@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  pokerback:
+    build:
+      context: ../../pokerback
+      dockerfile: docker/Dockerfile
+    command: ./manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ../../pokerback/:/app
+    ports:
+      - 8000:8000
+    env_file:
+      - ../envs/dev/.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+    ports:
+      - 9628:5432
+
+volumes:
+  postgres_data:
