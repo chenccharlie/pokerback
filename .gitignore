@@ -1,1 +1,3 @@
 envs/
+*.sqlite3
+*.pyc
