@@ -19,9 +19,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - POSTGRES_USER=pokerback
+      - POSTGRES_PASSWORD=pokerback
+      - POSTGRES_DB=pokerback_dev
     ports:
       - 9628:5432
 
