@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 from enum import Enum
-from typing import NamedTuple, NamedTupleMeta, List, Dict, Union
+from typing import List, Dict, Union
 
 from pokerback.utils.redis import get_redis
 
@@ -70,66 +70,75 @@ def _object_from_json_value(cls, json_value):
     elif real_cls is Union:
         value_cls = _get_value_class(cls)
         return _object_from_json_value(value_cls, json_value)
-    elif issubclass(real_cls, NamedTuple):
+    elif issubclass(real_cls, BaseObject):
         assert isinstance(json_value, dict)
-        return namedtuple_from_json_dict(real_cls, json_value)
+        return baseobject_from_json_dict(real_cls, json_value)
     elif issubclass(real_cls, Enum):
         return real_cls(json_value)
     return json_value
 
 
-def namedtuple_from_json_dict(cls, diict):
+def baseobject_from_json_dict(cls, diict):
     for key in diict.keys():
-        field_class = cls._field_types[key]
+        field_class = cls.__annotations__[key]
         diict[key] = _object_from_json_value(field_class, diict[key])
     return cls(**diict)
 
 
-def namedtuple_as_json_dict(obj):
-    if hasattr(obj, "_asdict"):  # detect namedtuple
+def baseobject_as_json_dict(obj):
+    if isinstance(obj, BaseObject):  # detect baseobject
         return OrderedDict(
-            zip(obj._fields, (namedtuple_as_json_dict(item) for item in obj))
+            {
+                key: baseobject_as_json_dict(value)
+                for key, value in obj._asdict().items()
+            }
         )
     elif isinstance(obj, str):  # iterables - strings
         return obj
     elif hasattr(obj, "keys"):  # iterables - mapping
         return OrderedDict(
-            zip(obj.keys(), (namedtuple_as_json_dict(item) for item in obj.values()))
+            zip(obj.keys(), (baseobject_as_json_dict(item) for item in obj.values()))
         )
     elif hasattr(obj, "__iter__"):  # iterables - sequence
-        return type(obj)((namedtuple_as_json_dict(item) for item in obj))
+        return type(obj)((baseobject_as_json_dict(item) for item in obj))
     elif isinstance(obj, Enum):
         return obj.value
-    else:  # non-iterable cannot contain namedtuples
+    else:  # non-iterable cannot contain baseobjects
         return obj
 
 
-class MultipleInheritanceNamedTupleMeta(NamedTupleMeta):
-    def __new__(mcls, typename, bases, ns):
-        if NamedTuple in bases:
-            base = super().__new__(mcls, "_base_" + typename, bases, ns)
-            bases = (base, *(b for b in bases if not isinstance(b, NamedTuple)))
-        return super(NamedTupleMeta, mcls).__new__(mcls, typename, bases, ns)
+class BaseObject(object):
+    def __init__(self, *args, **kwargs):
+        for key in kwargs:
+            setattr(self, key, kwargs[key])
 
+    def _asdict(self):
+        return {
+            key: getattr(self, key) for key in self.__class__.__annotations__.keys()
+        }
 
-class NamedTupleJsonMixin(metaclass=MultipleInheritanceNamedTupleMeta):
+    def __repr__(self) -> str:
+        return str(self._asdict())
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, BaseObject):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+        return self.__repr__() == other.__repr__()
+
     def validate(self):
         pass
 
     def to_json_str(self):
-        return json.dumps(namedtuple_as_json_dict(self))
+        return json.dumps(baseobject_as_json_dict(self))
 
     @classmethod
     def from_json_str(cls, json_str):
         json_dict = json.loads(json_str)
-        return namedtuple_from_json_dict(cls, json_dict)
+        return baseobject_from_json_dict(cls, json_dict)
 
 
-class BaseObjectMixin(NamedTupleJsonMixin):
-    pass
-
-
-class BaseRedisObjectMixin(BaseObjectMixin):
+class BaseRedisObject(BaseObject):
     object_key_prefix = "fake_prefix_"
 
     def get_object_key(self):

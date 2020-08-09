@@ -1,9 +1,10 @@
 import json
 import pytest
 from enum import Enum
-from typing import List, Dict, Optional, NamedTuple
+from recordclass import RecordClass
+from typing import List, Dict, Optional
 
-from pokerback.utils.namedtuple import BaseObjectMixin
+from pokerback.utils.baseobject import BaseObject
 
 
 class Choice(Enum):
@@ -11,13 +12,13 @@ class Choice(Enum):
     CHOICE_B = 2
 
 
-class A(NamedTuple, BaseObjectMixin):
+class A(BaseObject):
     num: int
     text: str
     choice: Choice = Choice.CHOICE_B
 
 
-class B(NamedTuple, BaseObjectMixin):
+class B(BaseObject):
     a: A
     lists: List[Dict[str, A]]
     dicts: Dict[str, List[Optional[A]]]

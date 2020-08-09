@@ -1,9 +1,9 @@
 import random
 import uuid
 from enum import Enum
-from typing import NamedTuple, List, Dict, Optional
+from typing import List, Dict, Optional
 
-from pokerback.utils.namedtuple import BaseObjectMixin, BaseRedisObjectMixin
+from pokerback.utils.baseobject import BaseObject, BaseRedisObject
 
 
 class SlotStatus(Enum):
@@ -12,12 +12,12 @@ class SlotStatus(Enum):
     EMPTY = 3
 
 
-class Slot(NamedTuple, BaseObjectMixin):
+class Slot(BaseObject):
     player_id: Optional[str] = None
     slot_status: SlotStatus = SlotStatus.EMPTY
 
 
-class GameMetadata(NamedTuple, BaseObjectMixin):
+class GameMetadata(BaseObject):
     max_slots: int
     slots: List[Slot]
     small_blind: int
@@ -32,7 +32,7 @@ class CardColor(Enum):
     CLUB = 4
 
 
-class Card(NamedTuple, BaseObjectMixin):
+class Card(BaseObject):
     card_id: int
     color: CardColor
     number: int
@@ -43,7 +43,7 @@ class PlayerStatus(Enum):
     FOLDED = 2
 
 
-class PlayerGameState(NamedTuple, BaseObjectMixin):
+class PlayerGameState(BaseObject):
     player_id: str
     cards: List[Card]
     amount_betting: int
@@ -58,13 +58,13 @@ class ActionType(Enum):
     FOLD = 3
 
 
-class Action(NamedTuple, BaseObjectMixin):
+class Action(BaseObject):
     player_id: str
     action_type: ActionType
     amount_bet: int
 
 
-class Pot(NamedTuple, BaseObjectMixin):
+class Pot(BaseObject):
     player_ids: List[str]
     amount: int
 
@@ -83,7 +83,7 @@ class GameStatus(Enum):
     PAUSED = 3
 
 
-class Game(NamedTuple, BaseObjectMixin):
+class Game(BaseObject):
     game_id: str
     metadata: GameMetadata
     table_cards: List[Card]
@@ -101,19 +101,19 @@ class AmountChangeType(Enum):
     NOT_CHANGED = 3
 
 
-class AmountChangeLog(NamedTuple, BaseObjectMixin):
+class AmountChangeLog(BaseObject):
     change_type: AmountChangeType
     amount_changed: int
     game_id: str
 
 
-class Player(NamedTuple, BaseObjectMixin):
+class Player(BaseObject):
     player_id: str
     amount_available: int
     amount_change_log: List[AmountChangeLog]
 
 
-class Room(NamedTuple, BaseRedisObjectMixin):
+class Room(BaseRedisObject):
     room_uuid: str
     room_key: str
     host_user_id: str
