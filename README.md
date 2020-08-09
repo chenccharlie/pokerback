@@ -11,3 +11,7 @@
 
 ## SSH into the docker container
 `docker exec -it docker_pokerback_1 /bin/bash`
+
+## Run unit tests
+`export DJANGO_SETTINGS_MODULE=pokerback.settings`
+`pytest tests/*`
