@@ -1,5 +1,6 @@
 import json
 from collections import OrderedDict
+from enum import Enum
 from typing import NamedTuple, NamedTupleMeta, List, Dict, Union
 
 from pokerback.utils.redis import get_redis
@@ -72,6 +73,8 @@ def _object_from_json_value(cls, json_value):
     elif issubclass(real_cls, NamedTuple):
         assert isinstance(json_value, dict)
         return namedtuple_from_json_dict(real_cls, json_value)
+    elif issubclass(real_cls, Enum):
+        return real_cls(json_value)
     return json_value
 
 
@@ -95,6 +98,8 @@ def namedtuple_as_json_dict(obj):
         )
     elif hasattr(obj, "__iter__"):  # iterables - sequence
         return type(obj)((namedtuple_as_json_dict(item) for item in obj))
+    elif isinstance(obj, Enum):
+        return obj.value
     else:  # non-iterable cannot contain namedtuples
         return obj
 
@@ -132,9 +137,11 @@ class BaseRedisObjectMixin(BaseObjectMixin):
 
     def save(self):
         self.validate()
-        get_redis().set(object_key_prefix + self.get_object_key(), self.to_json_str())
+        get_redis().set(
+            self.object_key_prefix + self.get_object_key(), self.to_json_str()
+        )
 
     @classmethod
     def load(cls, object_key):
-        json_str = get_redis().get(object_key_prefix + object_key)
+        json_str = get_redis().get(cls.object_key_prefix + object_key)
         return cls.from_json_str(json_str)

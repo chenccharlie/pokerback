@@ -1,3 +1,5 @@
+import random
+import uuid
 from enum import Enum
 from typing import NamedTuple, List, Dict, Optional
 
@@ -11,16 +13,16 @@ class SlotStatus(Enum):
 
 
 class Slot(NamedTuple, BaseObjectMixin):
-    player_id: Optional[str]
-    slot_status: SlotStatus
+    player_id: Optional[str] = None
+    slot_status: SlotStatus = SlotStatus.EMPTY
 
 
 class GameMetadata(NamedTuple, BaseObjectMixin):
     max_slots: int
     slots: List[Slot]
-    button_idx: int
     small_blind: int
     action_seconds_limit: int
+    button_idx: int = 0
 
 
 class CardColor(Enum):
@@ -116,10 +118,31 @@ class Room(NamedTuple, BaseRedisObjectMixin):
     room_key: str
     host_user_id: str
     game_metadata: GameMetadata
-    games: List[Game]
-    players: Dict[str, Player]
+    games: List[Game] = []
+    players: Dict[str, Player] = {}
 
     object_key_prefix = "room_"
 
     def get_object_key(self):
         return self.room_uuid
+
+    @classmethod
+    def create_room(
+        cls, host_user_id, max_slots=8, small_blind=10, action_seconds_limit=30
+    ):
+        room_uuid = str(uuid.uuid4())
+        room_key = "".join([chr(ord("A") + random.randint(0, 25)) for x in range(5)])
+
+        room = Room(
+            room_uuid=room_uuid,
+            room_key=room_key,
+            host_user_id=host_user_id,
+            game_metadata=GameMetadata(
+                max_slots=max_slots,
+                small_blind=small_blind,
+                action_seconds_limit=action_seconds_limit,
+                slots=[Slot() for x in range(max_slots)],
+            ),
+        )
+        room.save()
+        return room_uuid

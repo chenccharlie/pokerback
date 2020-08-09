@@ -1,13 +1,20 @@
 import json
 import pytest
+from enum import Enum
 from typing import List, Dict, Optional, NamedTuple
 
 from pokerback.utils.namedtuple import BaseObjectMixin
 
 
+class Choice(Enum):
+    CHOICE_A = 1
+    CHOICE_B = 2
+
+
 class A(NamedTuple, BaseObjectMixin):
     num: int
     text: str
+    choice: Choice = Choice.CHOICE_B
 
 
 class B(NamedTuple, BaseObjectMixin):
@@ -39,20 +46,20 @@ def b_object(a_object):
 def b_json():
     return json.dumps(
         {
-            "a": {"num": 1, "text": "text_a",},
+            "a": {"num": 1, "text": "text_a", "choice": 2},
             "lists": [
                 {
-                    "first": {"num": 1, "text": "text_a"},
-                    "second": {"num": 1, "text": "text_a"},
+                    "first": {"num": 1, "text": "text_a", "choice": 2},
+                    "second": {"num": 1, "text": "text_a", "choice": 2},
                 },
-                {"third": {"num": 1, "text": "text_a"}},
+                {"third": {"num": 1, "text": "text_a", "choice": 2}},
             ],
             "dicts": {
-                "first": [{"num": 1, "text": "text_a"}, None],
-                "second": [{"num": 1, "text": "text_a"}],
+                "first": [{"num": 1, "text": "text_a", "choice": 2}, None],
+                "second": [{"num": 1, "text": "text_a", "choice": 2}],
             },
             "optionals_none": None,
-            "optionals_present": {"num": 1, "text": "text_a"},
+            "optionals_present": {"num": 1, "text": "text_a", "choice": 2},
         }
     )
 
