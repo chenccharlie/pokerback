@@ -2,6 +2,8 @@ import json
 from collections import OrderedDict
 from typing import NamedTuple, NamedTupleMeta, List, Dict, Union
 
+from pokerback.utils.redis import get_redis
+
 
 def _get_value_class_from_optional(cls):
     classes = cls.__args__
@@ -120,3 +122,19 @@ class NamedTupleJsonMixin(metaclass=MultipleInheritanceNamedTupleMeta):
 
 class BaseObjectMixin(NamedTupleJsonMixin):
     pass
+
+
+class BaseRedisObjectMixin(BaseObjectMixin):
+    object_key_prefix = "fake_prefix_"
+
+    def get_object_key(self):
+        raise NotImplemented
+
+    def save(self):
+        self.validate()
+        get_redis().set(object_key_prefix + self.get_object_key(), self.to_json_str())
+
+    @classmethod
+    def load(cls, object_key):
+        json_str = get_redis().get(object_key_prefix + object_key)
+        return cls.from_json_str(json_str)

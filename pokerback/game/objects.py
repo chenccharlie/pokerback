@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import NamedTuple, List, Dict, Optional
 
+from pokerback.utils.namedtuple import BaseObjectMixin, BaseRedisObjectMixin
+
 
 class SlotStatus(Enum):
     ACTIVE = 1
@@ -8,12 +10,12 @@ class SlotStatus(Enum):
     EMPTY = 3
 
 
-class Slot(NamedTuple):
+class Slot(NamedTuple, BaseObjectMixin):
     player_id: Optional[str]
     slot_status: SlotStatus
 
 
-class GameMetadata(NamedTuple):
+class GameMetadata(NamedTuple, BaseObjectMixin):
     max_slots: int
     slots: List[Slot]
     button_idx: int
@@ -28,7 +30,7 @@ class CardColor(Enum):
     CLUB = 4
 
 
-class Card(NamedTuple):
+class Card(NamedTuple, BaseObjectMixin):
     card_id: int
     color: CardColor
     number: int
@@ -39,7 +41,7 @@ class PlayerStatus(Enum):
     FOLDED = 2
 
 
-class PlayerGameState(NamedTuple):
+class PlayerGameState(NamedTuple, BaseObjectMixin):
     player_id: str
     cards: List[Card]
     amount_betting: int
@@ -54,13 +56,13 @@ class ActionType(Enum):
     FOLD = 3
 
 
-class Action(NamedTuple):
+class Action(NamedTuple, BaseObjectMixin):
     player_id: str
     action_type: ActionType
     amount_bet: int
 
 
-class Pot(NamedTuple):
+class Pot(NamedTuple, BaseObjectMixin):
     player_ids: List[str]
     amount: int
 
@@ -79,7 +81,7 @@ class GameStatus(Enum):
     PAUSED = 3
 
 
-class Game(NamedTuple):
+class Game(NamedTuple, BaseObjectMixin):
     game_id: str
     metadata: GameMetadata
     table_cards: List[Card]
@@ -97,21 +99,27 @@ class AmountChangeType(Enum):
     NOT_CHANGED = 3
 
 
-class AmountChangeLog(NamedTuple):
+class AmountChangeLog(NamedTuple, BaseObjectMixin):
     change_type: AmountChangeType
     amount_changed: int
     game_id: str
 
 
-class Player(NamedTuple):
+class Player(NamedTuple, BaseObjectMixin):
     player_id: str
     amount_available: int
     amount_change_log: List[AmountChangeLog]
 
 
-class Room(NamedTuple):
+class Room(NamedTuple, BaseRedisObjectMixin):
+    room_uuid: str
     room_key: str
     host_user_id: str
     game_metadata: GameMetadata
     games: List[Game]
     players: Dict[str, Player]
+
+    object_key_prefix = "room_"
+
+    def get_object_key(self):
+        return self.room_uuid
