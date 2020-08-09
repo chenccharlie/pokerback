@@ -75,3 +75,9 @@ def test_serialize(b_object, b_json):
 def test_deserialize(b_object, b_json):
     constructed_b = B.from_json_str(b_json)
     assert constructed_b == b_object
+
+
+@pytest.mark.django_db
+def test_validate():
+    with pytest.raises(AssertionError):
+        A(num="a", text="b")

@@ -107,10 +107,33 @@ def baseobject_as_json_dict(obj):
         return obj
 
 
+def validate_baseobject_types(cls, obj):
+    real_cls = _get_class(cls)
+    if real_cls is Dict:
+        value_cls = _get_value_class(cls)
+        for key in obj.keys():
+            validate_baseobject_types(value_cls, obj.get(key, None))
+    elif real_cls is List:
+        value_cls = _get_value_class(cls)
+        for val in obj:
+            validate_baseobject_types(value_cls, val)
+    elif real_cls is Union:
+        if not obj:
+            return
+        value_cls = _get_value_class(cls)
+        validate_baseobject_types(value_cls, obj)
+    else:
+        assert isinstance(obj, cls)
+        if issubclass(real_cls, BaseObject):
+            for key, value_cls in real_cls.__annotations__.items():
+                validate_baseobject_types(value_cls, getattr(obj, key, None))
+
+
 class BaseObject(object):
     def __init__(self, *args, **kwargs):
         for key in kwargs:
             setattr(self, key, kwargs[key])
+        self.validate()
 
     def _asdict(self):
         return {
@@ -127,7 +150,7 @@ class BaseObject(object):
         return self.__repr__() == other.__repr__()
 
     def validate(self):
-        pass
+        validate_baseobject_types(self.__class__, self)
 
     def to_json_str(self):
         return json.dumps(baseobject_as_json_dict(self))
@@ -149,6 +172,9 @@ class BaseRedisObject(BaseObject):
         get_redis().set(
             self.object_key_prefix + self.get_object_key(), self.to_json_str()
         )
+
+    def refresh(self):
+        self.__dict__ = self.__class__.load(self.get_object_key()).__dict__
 
     @classmethod
     def load(cls, object_key):
