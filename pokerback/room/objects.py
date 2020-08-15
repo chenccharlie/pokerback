@@ -2,16 +2,17 @@ from enum import Enum
 from typing import List, Optional
 
 from pokerback.utils.baseobject import BaseObject
+from pokerback.utils.enums import ModelEnum
 
 
-class GameType(Enum):
-    POKER = 1
+class GameType(ModelEnum):
+    POKER = "poker"
 
 
 class SlotStatus(Enum):
-    ACTIVE = 1
-    SPECTATE = 2
-    EMPTY = 3
+    ACTIVE = "active"
+    SPECTATE = "spectate"
+    EMPTY = "empty"
 
 
 class Slot(BaseObject):
@@ -24,3 +25,8 @@ class TableMetadata(BaseObject):
     max_slots: int
     slots: List[Slot]
     action_seconds_limit: int
+
+
+class RoomStatus(ModelEnum):
+    ACTIVE = "active"
+    CLOSED = "closed"

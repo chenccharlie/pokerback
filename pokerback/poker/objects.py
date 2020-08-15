@@ -6,9 +6,9 @@ from pokerback.utils.baseobject import BaseObject
 
 
 class AmountChangeType(Enum):
-    INCREASE = 1
-    DECREASE = 2
-    NOT_CHANGED = 3
+    INCREASE = "increase"
+    DECREASE = "decrease"
+    NOT_CHANGED = "not_changed"
 
 
 class AmountChangeLog(BaseObject):
@@ -29,10 +29,10 @@ class GameMetadata(BaseObject):
 
 
 class CardColor(Enum):
-    SPADE = 1
-    HEART = 2
-    DIAMOND = 3
-    CLUB = 4
+    SPADE = "spade"
+    HEART = "heart"
+    DIAMOND = "diamond"
+    CLUB = "club"
 
 
 class Card(BaseObject):
@@ -42,8 +42,8 @@ class Card(BaseObject):
 
 
 class PlayerStatus(Enum):
-    BETTING = 1
-    FOLDED = 2
+    BETTING = "betting"
+    FOLDED = "folded"
 
 
 class PlayerGameState(BaseObject):
@@ -56,9 +56,9 @@ class PlayerGameState(BaseObject):
 
 
 class ActionType(Enum):
-    CHECK = 1
-    BET = 2
-    FOLD = 3
+    CHECK = "check"
+    BET = "bet"
+    FOLD = "fold"
 
 
 class Action(BaseObject):
@@ -73,17 +73,17 @@ class Pot(BaseObject):
 
 
 class GameStage(Enum):
-    PRE_FLOP = 1
-    FLOP = 2
-    TURN = 3
-    RIVER = 4
-    SHOW_HAND = 5
+    PRE_FLOP = "pre_flop"
+    FLOP = "flop"
+    TURN = "turn"
+    RIVER = "river"
+    SHOW_HAND = "show_hand"
 
 
 class GameStatus(Enum):
-    PLAYING = 1
-    OVER = 2
-    PAUSED = 3
+    PLAYING = "playing"
+    OVER = "over"
+    PAUSED = "paused"
 
 
 class Game(BaseObject):
