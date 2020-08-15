@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "pokerback.poker",
     "pokerback.room",
     "pokerback.user",
+    "pokerback.utils",
 ]
 
 MIDDLEWARE = [

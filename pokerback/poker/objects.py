@@ -1,11 +1,11 @@
-from enum import Enum
 from typing import List, Dict
 
 from pokerback.room.objects import TableMetadata
 from pokerback.utils.baseobject import BaseObject
+from pokerback.utils.enums import ModelEnum
 
 
-class AmountChangeType(Enum):
+class AmountChangeType(ModelEnum):
     INCREASE = "increase"
     DECREASE = "decrease"
     NOT_CHANGED = "not_changed"
@@ -28,7 +28,7 @@ class GameMetadata(BaseObject):
     button_idx: int = 0
 
 
-class CardColor(Enum):
+class CardColor(ModelEnum):
     SPADE = "spade"
     HEART = "heart"
     DIAMOND = "diamond"
@@ -41,7 +41,7 @@ class Card(BaseObject):
     number: int
 
 
-class PlayerStatus(Enum):
+class PlayerStatus(ModelEnum):
     BETTING = "betting"
     FOLDED = "folded"
 
@@ -55,7 +55,7 @@ class PlayerGameState(BaseObject):
     pot_won: int
 
 
-class ActionType(Enum):
+class ActionType(ModelEnum):
     CHECK = "check"
     BET = "bet"
     FOLD = "fold"
@@ -72,7 +72,7 @@ class Pot(BaseObject):
     amount: int
 
 
-class GameStage(Enum):
+class GameStage(ModelEnum):
     PRE_FLOP = "pre_flop"
     FLOP = "flop"
     TURN = "turn"
@@ -80,7 +80,7 @@ class GameStage(Enum):
     SHOW_HAND = "show_hand"
 
 
-class GameStatus(Enum):
+class GameStatus(ModelEnum):
     PLAYING = "playing"
     OVER = "over"
     PAUSED = "paused"

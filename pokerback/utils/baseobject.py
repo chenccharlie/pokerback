@@ -122,6 +122,8 @@ def validate_baseobject_types(cls, obj):
             return
         value_cls = _get_value_class(cls)
         validate_baseobject_types(value_cls, obj)
+    elif issubclass(real_cls, Enum):
+        assert str(obj) in [e.value for e in real_cls]
     else:
         assert isinstance(obj, cls)
         if issubclass(real_cls, BaseObject):

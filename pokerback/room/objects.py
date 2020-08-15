@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import List, Optional
 
 from pokerback.utils.baseobject import BaseObject
@@ -9,7 +8,7 @@ class GameType(ModelEnum):
     POKER = "poker"
 
 
-class SlotStatus(Enum):
+class SlotStatus(ModelEnum):
     ACTIVE = "active"
     SPECTATE = "spectate"
     EMPTY = "empty"
