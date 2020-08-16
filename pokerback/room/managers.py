@@ -22,8 +22,8 @@ class RoomManager:
                 room_uuid=room_uuid,
                 room_key=room_key,
                 host_user=host_user,
-                game_type=str(game_type),
-                room_status=str(RoomStatus.ACTIVE),
+                game_type=game_type,
+                room_status=RoomStatus.ACTIVE,
             )
 
         room_model.init_room(**kwargs)
