@@ -154,8 +154,11 @@ class BaseObject(object):
     def validate(self):
         validate_baseobject_types(self.__class__, self)
 
+    def to_json(self):
+        return baseobject_as_json_dict(self)
+
     def to_json_str(self):
-        return json.dumps(baseobject_as_json_dict(self))
+        return json.dumps(self.to_json())
 
     @classmethod
     def from_json_str(cls, json_str):
