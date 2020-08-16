@@ -138,6 +138,8 @@ class BaseObject(object):
         self.validate()
 
     def _asdict(self):
+        if not hasattr(self.__class__, "__annotations__"):
+            return {}
         return {
             key: getattr(self, key) for key in self.__class__.__annotations__.keys()
         }
@@ -160,13 +162,28 @@ class BaseObject(object):
     def to_json_str(self):
         return json.dumps(self.to_json())
 
+    def deep_get(self, path, default=None):
+        try:
+            paths = path.split(".")
+            if len(paths) == 1:
+                return getattr(self, path, default) or default
+            if hasattr(self, paths[0]):
+                return getattr(self, paths[0]).deep_get(
+                    path=".".join(paths[1:]), default=default
+                )
+            else:
+                return default
+        except Exception as e:
+            print(e)
+            return default
+
     @classmethod
     def from_json(cls, json_dict):
         return baseobject_from_json_dict(cls, json_dict)
 
     @classmethod
     def from_json_str(cls, json_str):
-        return cls.from_json(json.loads(json_str))
+        return baseobject_from_json_dict(cls, json.loads(json_str))
 
 
 class BaseRedisObject(BaseObject):
@@ -183,6 +200,9 @@ class BaseRedisObject(BaseObject):
 
     def refresh(self):
         self.__dict__ = self.__class__.load(self.get_object_key()).__dict__
+
+    def delete(self):
+        get_redis().delete(self.object_key_prefix + self.get_object_key(),)
 
     @classmethod
     def load(cls, object_key):

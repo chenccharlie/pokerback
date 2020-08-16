@@ -22,6 +22,9 @@ class RedisClient:
         except Exception:
             return self.redis_client.get(key)
 
+    def delete(self, key):
+        self.redis_client.delete(key)
+
     def update_dict(self, key, dict_vals):
         cur = self.get(key)
         if not isinstance(cur, dict):

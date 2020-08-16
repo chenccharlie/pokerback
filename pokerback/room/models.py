@@ -22,6 +22,7 @@ class RoomModel(models.Model):
     )
     game_type = models.CharField(max_length=64, choices=GameType.choices())
     room_status = models.CharField(max_length=32, choices=RoomStatus.choices())
+    room_record = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -43,10 +44,13 @@ class RoomModel(models.Model):
         }
         return action_seconds_limit[game_type]
 
-    def init_room(self, **kwargs):
-        max_slots = kwargs.pop("max_slots", self._default_max_slots(self.game_type))
-        action_seconds_limit = kwargs.pop(
-            "action_seconds_limit", self._default_action_seconds_limit(self.game_type)
+    def init_room(self, create_room_request):
+        max_slots = create_room_request.deep_get(
+            "max_slots", default=self._default_max_slots(self.game_type)
+        )
+        action_seconds_limit = create_room_request.deep_get(
+            "action_seconds_limit",
+            default=self._default_action_seconds_limit(self.game_type),
         )
 
         room = Room(
