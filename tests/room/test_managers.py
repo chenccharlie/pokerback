@@ -17,12 +17,13 @@ def test_create_room(user):
     assert room.room_key == room_model.room_key
     assert room.table_metadata.max_slots == 8
     assert room.table_metadata.action_seconds_limit == 60
+    assert room.poker_games.game_metadata.small_blind == 10
 
 
 @pytest.mark.django_db
 def test_create_room_custom_poker(user):
     room_model = RoomManager.create_room(
-        user, GameType.POKER, max_slots=6, action_seconds_limit=30
+        user, GameType.POKER, max_slots=6, action_seconds_limit=30, small_blind=20,
     )
     assert room_model.room_status == str(RoomStatus.ACTIVE)
 
@@ -30,6 +31,7 @@ def test_create_room_custom_poker(user):
     assert room.room_key == room_model.room_key
     assert room.table_metadata.max_slots == 6
     assert room.table_metadata.action_seconds_limit == 30
+    assert room.poker_games.game_metadata.small_blind == 20
 
 
 @pytest.mark.django_db

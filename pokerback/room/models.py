@@ -62,6 +62,7 @@ class RoomModel(models.Model):
             ),
         )
         room.save()
+        return room
 
     def load_room(self):
         return Room.load(str(self.room_uuid))

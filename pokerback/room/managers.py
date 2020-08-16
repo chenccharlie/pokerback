@@ -3,12 +3,21 @@ import uuid
 
 from django.db import transaction
 
+from pokerback.poker.managers import PokerManager
 from pokerback.room.models import RoomModel
-from pokerback.room.objects import RoomStatus
+from pokerback.room.objects import RoomStatus, GameType
+from pokerback.utils.redis import RedisLock
 
 
 def get_new_game_key():
     return "".join([chr(ord("A") + random.randint(0, 25)) for x in range(5)])
+
+
+def get_game_manager(game_type):
+    game_managers = {
+        GameType.POKER: PokerManager(),
+    }
+    return game_managers[game_type]
 
 
 class RoomManager:
@@ -26,5 +35,8 @@ class RoomManager:
                 room_status=RoomStatus.ACTIVE,
             )
 
-        room_model.init_room(**kwargs)
+        with RedisLock(room_uuid):
+            room = room_model.init_room(**kwargs)
+            get_game_manager(game_type).init_game(room, **kwargs)
+
         return room_model
