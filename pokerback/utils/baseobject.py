@@ -126,7 +126,7 @@ def validate_baseobject_types(cls, obj):
         assert str(obj) in [e.value for e in real_cls]
     else:
         assert isinstance(obj, cls)
-        if issubclass(real_cls, BaseObject):
+        if issubclass(real_cls, BaseObject) and hasattr(real_cls, "__annotations__"):
             for key, value_cls in real_cls.__annotations__.items():
                 validate_baseobject_types(value_cls, getattr(obj, key, None))
 
@@ -161,9 +161,12 @@ class BaseObject(object):
         return json.dumps(self.to_json())
 
     @classmethod
-    def from_json_str(cls, json_str):
-        json_dict = json.loads(json_str)
+    def from_json(cls, json_dict):
         return baseobject_from_json_dict(cls, json_dict)
+
+    @classmethod
+    def from_json_str(cls, json_str):
+        return cls.from_json(json.loads(json_str))
 
 
 class BaseRedisObject(BaseObject):
