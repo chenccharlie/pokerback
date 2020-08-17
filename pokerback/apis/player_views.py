@@ -11,18 +11,18 @@ from pokerback.room.managers import RoomManager
 from pokerback.room.models import RoomModel
 from pokerback.room.objects import RoomStatus
 from pokerback.utils.authentication import PlayerSigninAuthentication
-from pokerback.utils.views import BaseGetView, BasePostView, BasicRequest
+from pokerback.utils.views import BaseGetView, BasePostView, BasicRequest, BasicResponse
 
 
 class SigninView(BasePostView):
     authentication_classes = (PlayerSigninAuthentication,)
 
     request_class = PlayerSigninRequest
-    response_class = PlayerRetrieveRoomResponse
+    response_class = BasicResponse
 
     def handle_request(self, request_obj):
         room_key = request_obj.room_key
-        room_model = generics.get_object_or_404(
+        generics.get_object_or_404(
             RoomModel.objects, room_key=room_key, room_status=RoomStatus.ACTIVE
         )
 
@@ -31,8 +31,7 @@ class SigninView(BasePostView):
         self.request.session["name"] = request_obj.name
         self.request.session["room_key"] = room_key
 
-        room = room_model.load_room()
-        return PlayerRetrieveRoomResponse(room=room)
+        return BasicResponse()
 
 
 class RetrieveRoomView(BaseGetView):
