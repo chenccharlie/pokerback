@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from pokerback.room import player_views
+from pokerback.apis import player_views
 
 
 urlpatterns = [

@@ -1,13 +1,13 @@
 from rest_framework import generics
 
-from pokerback.room.managers import RoomManager
-from pokerback.room.models import RoomModel
-from pokerback.room.objects import RoomStatus
-from pokerback.room.player_apis import (
+from pokerback.apis.player_apis import (
     PlayerRetrieveRoomRequest,
     PlayerRetrieveRoomResponse,
     PlayerJoinRoomRequest,
 )
+from pokerback.room.managers import RoomManager
+from pokerback.room.models import RoomModel
+from pokerback.room.objects import RoomStatus
 from pokerback.utils.views import BaseAPIView
 
 

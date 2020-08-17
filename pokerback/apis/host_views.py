@@ -1,12 +1,12 @@
 from rest_framework import generics
 
-from pokerback.room.managers import RoomManager
-from pokerback.room.models import RoomModel
-from pokerback.room.objects import GameType, RoomStatus
-from pokerback.room.host_apis import (
+from pokerback.apis.host_apis import (
     HostCreateRoomRequest,
     HostRetrieveRoomResponse,
 )
+from pokerback.room.managers import RoomManager
+from pokerback.room.models import RoomModel
+from pokerback.room.objects import GameType, RoomStatus
 from pokerback.user.models import User
 from pokerback.utils.authentication import HostAuthentication
 from pokerback.utils.views import BaseAPIView, BasicRequest, BasicResponse

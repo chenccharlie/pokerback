@@ -4,7 +4,7 @@ from django.urls import include
 
 urlpatterns = [
     # Player URLs
-    url(r"^room/", include("pokerback.room.player_urls")),
+    url(r"^", include("pokerback.apis.player_urls")),
     # Host URLs
-    url(r"^host/room/", include("pokerback.room.host_urls")),
+    url(r"^host/", include("pokerback.apis.host_urls")),
 ]
