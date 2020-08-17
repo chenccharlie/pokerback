@@ -5,14 +5,14 @@ from pokerback.room.objects import GameType
 from pokerback.utils.baseobject import BaseObject
 
 
-class PlayerRetrieveRoomRequest(BaseObject):
-    room_key: str
-
-
 class PlayerRetrieveRoomResponse(BaseObject):
     room: Room
 
 
-class PlayerJoinRoomRequest(BaseObject):
+class PlayerSigninRequest(BaseObject):
     room_key: str
+    name: str
+
+
+class PlayerSitRoomRequest(BaseObject):
     slot_idx: int

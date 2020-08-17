@@ -7,16 +7,32 @@ from rest_framework.exceptions import AuthenticationFailed
 from pokerback.user.models import User
 
 
+class PlayerSigninAuthed(typing.NamedTuple):
+    is_authenticated: bool = True
+
+
+class PlayerSigninAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        return PlayerSigninAuthed(), None
+
+
 class Player(typing.NamedTuple):
     uuid: str
+    name: str
+    room_key: str
     is_authenticated: bool = True
 
 
 class PlayerAuthentication(BaseAuthentication):
     def get_user(self, request):
-        if "uuid" not in request.session:
-            request.session["uuid"] = str(uuid.uuid4())
-        return Player(uuid=request.session["uuid"])
+        try:
+            return Player(
+                uuid=request.session["uuid"],
+                name=request.session["name"],
+                room_key=request.session["room_key"],
+            )
+        except Exception as e:
+            raise AuthenticationFailed()
 
     def authenticate(self, request):
         return self.get_user(request), None

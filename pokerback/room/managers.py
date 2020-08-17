@@ -59,13 +59,14 @@ class RoomManager:
             room_model.closed_at = datetime.datetime.now()
             room_model.save()
 
-    def add_player(self, room, player, slot_idx):
+    def sit_player(self, room, player, slot_idx):
         with RedisLock(room.room_uuid):
             original_state = None
             for slot in room.table_metadata.slots:
                 if slot.player_id == player.uuid:
                     original_state = slot.slot_status
                     slot.player_id = None
+                    slot.player_name = None
                     slot.slot_status = SlotStatus.EMPTY
             if slot_idx >= room.table_metadata.max_slots:
                 raise ValidationError("Slot out of range.")
@@ -73,6 +74,7 @@ class RoomManager:
                 raise ValidationError("Slot already filled.")
 
             room.table_metadata.slots[slot_idx].player_id = player.uuid
+            room.table_metadata.slots[slot_idx].player_name = player.name
             room.table_metadata.slots[slot_idx].slot_status = (
                 original_state or SlotStatus.ACTIVE
             )

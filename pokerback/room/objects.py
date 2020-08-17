@@ -16,6 +16,7 @@ class SlotStatus(ModelEnum):
 
 class Slot(BaseObject):
     player_id: Optional[str] = None
+    player_name: Optional[str] = None
     slot_status: SlotStatus = SlotStatus.EMPTY
 
 
