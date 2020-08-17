@@ -12,7 +12,30 @@ class BasicResponse(BaseObject):
     pass
 
 
-class BaseAPIView(generics.GenericAPIView):
+class BaseGetView(generics.GenericAPIView):
+    def get_response_class(self):
+        response_cls = getattr(self, "response_class")
+        assert issubclass(response_cls, BaseObject)
+        return response_cls
+
+    def handle_request(self):
+        raise NotImplemented
+
+    def get(self, request, *args, **kwargs):
+        response_obj = self.handle_request()
+
+        try:
+            response_json = response_obj.to_json()
+        except Exception as e:
+            print(e)
+            return Response(
+                "Response format is invalid.", status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return Response(response_json, status=status.HTTP_200_OK)
+
+
+class BasePostView(generics.GenericAPIView):
     def get_request_class(self):
         request_cls = getattr(self, "request_class")
         assert issubclass(request_cls, BaseObject)

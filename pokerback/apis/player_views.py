@@ -11,10 +11,10 @@ from pokerback.room.managers import RoomManager
 from pokerback.room.models import RoomModel
 from pokerback.room.objects import RoomStatus
 from pokerback.utils.authentication import PlayerSigninAuthentication
-from pokerback.utils.views import BaseAPIView, BasicRequest
+from pokerback.utils.views import BaseGetView, BasePostView, BasicRequest
 
 
-class SigninView(BaseAPIView):
+class SigninView(BasePostView):
     authentication_classes = (PlayerSigninAuthentication,)
 
     request_class = PlayerSigninRequest
@@ -35,11 +35,10 @@ class SigninView(BaseAPIView):
         return PlayerRetrieveRoomResponse(room=room)
 
 
-class RetrieveRoomView(BaseAPIView):
-    request_class = BasicRequest
+class RetrieveRoomView(BaseGetView):
     response_class = PlayerRetrieveRoomResponse
 
-    def handle_request(self, request_obj):
+    def handle_request(self):
         room_key = self.request.user.room_key
         room_model = generics.get_object_or_404(
             RoomModel.objects, room_key=room_key, room_status=RoomStatus.ACTIVE
@@ -48,7 +47,7 @@ class RetrieveRoomView(BaseAPIView):
         return PlayerRetrieveRoomResponse(room=room)
 
 
-class SitRoomView(BaseAPIView):
+class SitRoomView(BasePostView):
     request_class = PlayerSitRoomRequest
     response_class = PlayerRetrieveRoomResponse
 

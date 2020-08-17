@@ -9,10 +9,10 @@ from pokerback.room.models import RoomModel
 from pokerback.room.objects import GameType, RoomStatus
 from pokerback.user.models import User
 from pokerback.utils.authentication import HostAuthentication
-from pokerback.utils.views import BaseAPIView, BasicRequest, BasicResponse
+from pokerback.utils.views import BaseGetView, BasePostView, BasicRequest, BasicResponse
 
 
-class CreateRoomView(BaseAPIView):
+class CreateRoomView(BasePostView):
     authentication_classes = (HostAuthentication,)
 
     request_class = HostCreateRoomRequest
@@ -28,13 +28,12 @@ class CreateRoomView(BaseAPIView):
         return HostRetrieveRoomResponse(room=room)
 
 
-class RetrieveRoomView(BaseAPIView):
+class RetrieveRoomView(BaseGetView):
     authentication_classes = (HostAuthentication,)
 
-    request_class = BasicRequest
     response_class = HostRetrieveRoomResponse
 
-    def handle_request(self, request_obj):
+    def handle_request(self):
         room_model = generics.get_object_or_404(
             RoomModel.objects,
             host_user=self.request.user,
@@ -44,7 +43,7 @@ class RetrieveRoomView(BaseAPIView):
         return HostRetrieveRoomResponse(room=room)
 
 
-class CloseRoomView(BaseAPIView):
+class CloseRoomView(BasePostView):
     authentication_classes = (HostAuthentication,)
 
     request_class = BasicRequest
