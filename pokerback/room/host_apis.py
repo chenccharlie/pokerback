@@ -5,14 +5,6 @@ from pokerback.room.objects import GameType
 from pokerback.utils.baseobject import BaseObject
 
 
-class PlayerRetrieveRoomRequest(BaseObject):
-    room_key: str
-
-
-class PlayerRetrieveRoomResponse(BaseObject):
-    room: Room
-
-
 class HostCreatePokerRoomRequest(BaseObject):
     small_blind: Optional[int] = None
 
