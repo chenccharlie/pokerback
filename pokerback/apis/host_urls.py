@@ -13,5 +13,5 @@ urlpatterns = [
         host_views.StartGameView.as_view(),
         name="host_game-update-start",
     ),
-    url(r"^$", host_views.RetrieveRoomView.as_view(), name="host_room-retrieve",),
+    url(r"^view/$", host_views.RetrieveRoomView.as_view(), name="host_room-retrieve",),
 ]
