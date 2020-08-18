@@ -177,6 +177,9 @@ class BaseObject(object):
             print(e)
             return default
 
+    def copy(self):
+        return self.__class__.from_json_str(self.to_json_str())
+
     @classmethod
     def from_json(cls, json_dict):
         return baseobject_from_json_dict(cls, json_dict)

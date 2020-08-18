@@ -48,11 +48,16 @@ class RoomManager:
                 RoomModel.objects, host_user=host_user, room_status=RoomStatus.ACTIVE,
             )
 
-            room = room_model.load_room()
-            with RedisLock(room.room_uuid):
-                room.room_status = RoomStatus.CLOSED
-                room_record = room.to_json_str()
-                room.delete()
+            try:
+                room = room_model.load_room()
+                with RedisLock(room.room_uuid):
+                    room.room_status = RoomStatus.CLOSED
+                    room_record = room.to_json_str()
+                    room.delete()
+            except Exception as e:
+                # Change db status no matter whether redis operation success or not
+                print(e)
+                room_record = "invalid_value"
 
             room_model.room_record = room_record
             room_model.room_status = RoomStatus.CLOSED

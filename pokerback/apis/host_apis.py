@@ -7,6 +7,7 @@ from pokerback.utils.baseobject import BaseObject
 
 class HostCreatePokerRoomRequest(BaseObject):
     small_blind: Optional[int] = None
+    init_token: Optional[int] = None
 
 
 class HostCreateRoomRequest(BaseObject):
