@@ -26,6 +26,13 @@ class TableMetadata(BaseObject):
     slots: List[Slot]
     action_seconds_limit: int
 
+    def get_active_players(self):
+        player_ids = set()
+        for slot in self.slots:
+            if slot.slot_status == SlotStatus.ACTIVE:
+                player_ids.add(slot.player_id)
+        return player_ids
+
 
 class RoomStatus(ModelEnum):
     ACTIVE = "active"

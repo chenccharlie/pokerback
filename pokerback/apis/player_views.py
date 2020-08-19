@@ -3,11 +3,12 @@ import uuid
 from rest_framework import generics
 
 from pokerback.apis.player_apis import (
+    PlayerActionRequest,
     PlayerRetrieveRoomResponse,
     PlayerSigninRequest,
     PlayerSitRoomRequest,
 )
-from pokerback.room.managers import RoomManager
+from pokerback.room.managers import RoomManager, get_game_manager
 from pokerback.room.models import RoomModel
 from pokerback.room.objects import RoomStatus
 from pokerback.utils.authentication import PlayerSigninAuthentication
@@ -59,5 +60,22 @@ class SitRoomView(BasePostView):
         room = room_model.load_room()
 
         room = RoomManager().sit_player(room, self.request.user, slot_idx)
+
+        return PlayerRetrieveRoomResponse(room=room)
+
+
+class PlayerActionView(BasePostView):
+    request_class = PlayerActionRequest
+    response_class = PlayerRetrieveRoomResponse
+
+    def handle_request(self, request_obj):
+        room_key = self.request.user.room_key
+        room_model = generics.get_object_or_404(
+            RoomModel.objects, room_key=room_key, room_status=RoomStatus.ACTIVE
+        )
+        room = room_model.load_room()
+        room = get_game_manager(room.table_metadata.game_type).handle_player_action(
+            room, self.request.user.uuid, request_obj
+        )
 
         return PlayerRetrieveRoomResponse(room=room)

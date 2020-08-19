@@ -1,5 +1,6 @@
 from typing import Optional
 
+from pokerback.poker.player_apis import PokerAction
 from pokerback.room.models import Room
 from pokerback.room.objects import GameType
 from pokerback.utils.baseobject import BaseObject
@@ -16,3 +17,7 @@ class PlayerSigninRequest(BaseObject):
 
 class PlayerSitRoomRequest(BaseObject):
     slot_idx: int
+
+
+class PlayerActionRequest(BaseObject):
+    poker_action: Optional[PokerAction] = None

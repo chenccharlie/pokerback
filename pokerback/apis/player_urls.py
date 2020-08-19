@@ -11,4 +11,5 @@ urlpatterns = [
     ),
     url(r"^signin/$", player_views.SigninView.as_view(), name="player-update-signin",),
     url(r"^sit/$", player_views.SitRoomView.as_view(), name="player_room-update-sit",),
+    url(r"^action/$", player_views.PlayerActionView.as_view(), name="player_action",),
 ]
