@@ -11,3 +11,4 @@ class PokerAction(BaseObject):
             assert self.amount_bet > 0
         else:
             assert self.amount_bet == 0
+        super().validate()

@@ -1,6 +1,6 @@
 import random
 
-from pokerback.poker.objects import Card, CardColor, PlayerStatus, AmountChangeLog
+from pokerback.poker.objects import Card, PlayerStatus, AmountChangeLog
 from pokerback.room.objects import SlotStatus
 
 
@@ -14,10 +14,7 @@ def get_random_cards(num_cards):
 
     cards = []
     for num in res:
-        colors = [CardColor.SPADE, CardColor.HEART, CardColor.DIAMOND, CardColor.CLUB]
-        card_color = colors[int(num / 13)]
-        card_num = num % 13 + 1
-        cards.append(Card(card_id=num, color=card_color, number=card_num,))
+        cards.append(Card.from_id(num))
     return cards
 
 
