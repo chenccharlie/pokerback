@@ -511,7 +511,7 @@ class Game(BaseObject):
             # If bets are not equal yet we should not advance to show_hand
             return False
 
-        # We should advance to SHOW_HAND directly if at most 1 betting user has token left, and the one left is betting the most
+        # We should advance to SHOW_HAND directly if at most 1 betting user has token left
         capable_players = [
             player_id
             for player_id in self.player_states
