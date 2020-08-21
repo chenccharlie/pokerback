@@ -192,6 +192,7 @@ class PokerManager:
             amount_available=player_state.amount_available,
             amount_betting=player_state.amount_betting,
             total_betting=player_state.total_betting,
+            pot_won=player_state.pot_won,
             player_status=player_state.player_status,
             game_status=game.game_status,
             is_your_turn=(game.next_player_id == player_id),
