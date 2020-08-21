@@ -44,7 +44,7 @@ class RetrieveRoomView(BaseGetView):
             RoomModel.objects, room_key=room_key, room_status=RoomStatus.ACTIVE
         )
         room = room_model.load_room()
-        return PlayerRetrieveRoomResponse(room=room)
+        return PlayerRetrieveRoomResponse.from_room(room=room, request=self.request)
 
 
 class SitRoomView(BasePostView):
@@ -61,7 +61,7 @@ class SitRoomView(BasePostView):
 
         room = RoomManager().sit_player(room, self.request.user, slot_idx)
 
-        return PlayerRetrieveRoomResponse(room=room)
+        return PlayerRetrieveRoomResponse.from_room(room=room, request=self.request)
 
 
 class PlayerActionView(BasePostView):
@@ -78,4 +78,4 @@ class PlayerActionView(BasePostView):
             room, self.request.user.uuid, request_obj
         )
 
-        return PlayerRetrieveRoomResponse(room=room)
+        return PlayerRetrieveRoomResponse.from_room(room=room, request=self.request)

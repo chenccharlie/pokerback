@@ -8,6 +8,7 @@ from pokerback.poker.objects import (
     Game,
     PlayerGameState,
     PlayerTokens,
+    PlayerStateResponse,
 )
 from pokerback.poker.utils import (
     get_random_cards,
@@ -179,3 +180,21 @@ class PokerManager:
             # Save and return room
             room.save()
             return room
+
+    def fill_player_response(self, response, room, player_id):
+        if room.poker_games == None or len(room.poker_games.games) == 0:
+            return
+        game = room.poker_games.games[-1]
+
+        player_state = game.player_states[player_id]
+        player_state_response = PlayerStateResponse(
+            cards=player_state.cards,
+            amount_available=player_state.amount_available,
+            amount_betting=player_state.amount_betting,
+            total_betting=player_state.total_betting,
+            player_status=player_state.player_status,
+            game_status=game.game_status,
+            is_your_turn=(game.next_player_id == player_id),
+            min_bet=get_player_min_bet(game.player_states, player_id),
+        )
+        response.poker_state = player_state_response

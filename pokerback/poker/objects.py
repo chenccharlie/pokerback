@@ -525,3 +525,14 @@ class PokerGames(BaseObject):
     game_metadata: GameMetadata
     games: List[Game] = []
     players: Dict[str, PlayerTokens] = {}
+
+
+class PlayerStateResponse(BaseObject):
+    cards: List[Card]
+    amount_available: int
+    amount_betting: int
+    total_betting: int
+    player_status: PlayerStatus
+    game_status: GameStatus
+    is_your_turn: bool = False
+    min_bet: Optional[int] = None
