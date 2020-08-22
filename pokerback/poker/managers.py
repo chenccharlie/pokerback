@@ -185,13 +185,14 @@ class PokerManager:
         if room.poker_games == None or len(room.poker_games.games) == 0:
             return
         game = room.poker_games.games[-1]
+        if player_id not in game.player_states:
+            return
 
         player_state = game.player_states[player_id]
         player_state_response = PlayerStateResponse(
             cards=player_state.cards,
             amount_available=player_state.amount_available,
             amount_betting=player_state.amount_betting,
-            total_betting=player_state.total_betting,
             pot_won=player_state.pot_won,
             player_status=player_state.player_status,
             game_status=game.game_status,
