@@ -192,7 +192,6 @@ class PokerManager:
         player_state_response = PlayerStateResponse(
             cards=player_state.cards,
             amount_available=player_state.amount_available,
-            amount_betting=player_state.amount_betting,
             pot_won=player_state.pot_won,
             player_status=player_state.player_status,
             game_status=game.game_status,

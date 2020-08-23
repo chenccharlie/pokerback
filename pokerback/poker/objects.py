@@ -530,7 +530,6 @@ class PokerGames(BaseObject):
 class PlayerStateResponse(BaseObject):
     cards: List[Card]
     amount_available: int
-    amount_betting: int
     pot_won: int
     player_status: PlayerStatus
     game_status: GameStatus
