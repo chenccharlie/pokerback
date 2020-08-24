@@ -21,7 +21,7 @@ def get_random_cards(num_cards):
 def get_next_button_idx(room, start_idx):
     max_slots = room.table_metadata.max_slots
     slots = room.table_metadata.slots
-    res_idx = start_idx
+    res_idx = start_idx % max_slots
     while slots[res_idx].slot_status != SlotStatus.ACTIVE:
         res_idx = (res_idx + 1) % max_slots
     return res_idx

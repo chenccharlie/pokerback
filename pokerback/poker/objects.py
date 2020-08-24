@@ -147,11 +147,11 @@ class Hand(BaseObject):
         else:
             return (
                 hand_type_grade[item.hand_type],
-                sorted_cards[0].number,
-                sorted_cards[1].number,
-                sorted_cards[2].number,
-                sorted_cards[3].number,
-                sorted_cards[4].number,
+                (sorted_cards[0].number + 11) % 13,
+                (sorted_cards[1].number + 11) % 13,
+                (sorted_cards[2].number + 11) % 13,
+                (sorted_cards[3].number + 11) % 13,
+                (sorted_cards[4].number + 11) % 13,
             )
 
     @classmethod

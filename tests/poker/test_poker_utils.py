@@ -17,10 +17,10 @@ def test_form_hand():
     assert hand.hand_type == HandType.HIGH_CARD
 
     cards = [
-        Card.from_card(color=CardColor.SPADE, number=8),
-        Card.from_card(color=CardColor.SPADE, number=5),
+        Card.from_card(color=CardColor.SPADE, number=2),
+        Card.from_card(color=CardColor.CLUB, number=2),
         Card.from_card(color=CardColor.SPADE, number=1),
-        Card.from_card(color=CardColor.HEART, number=1),
+        Card.from_card(color=CardColor.CLUB, number=9),
         Card.from_card(color=CardColor.SPADE, number=4),
     ]
     hand = Hand.from_cards(cards)
