@@ -531,7 +531,7 @@ class PlayerStateResponse(BaseObject):
     cards: List[Card]
     amount_available: int
     pot_won: int
-    player_status: PlayerStatus
+    small_blind: int
     game_status: GameStatus
     is_your_turn: bool = False
     min_bet: Optional[int] = None

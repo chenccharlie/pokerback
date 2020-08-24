@@ -21,7 +21,15 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 [::1]").split(" ")
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 192.168.86.35 192.168.86.35:8000 192.168.86.35:3000 [::1]").split(" ")
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "192.168.86.35",
+    "192.168.86.35:8000",
+    "192.168.86.35:3000",
+]
 
 
 # Application definition

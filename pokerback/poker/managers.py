@@ -193,7 +193,7 @@ class PokerManager:
             cards=player_state.cards,
             amount_available=player_state.amount_available,
             pot_won=player_state.pot_won,
-            player_status=player_state.player_status,
+            small_blind=game.game_metadata.small_blind,
             game_status=game.game_status,
             is_your_turn=(game.next_player_id == player_id),
             min_bet=get_player_min_bet(game.player_states, player_id),
